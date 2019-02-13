@@ -58,70 +58,77 @@ int main()
 #endif
 #define WIDTH 1366
 #define HEIGHT (768-6)
-#define BOARDER 20
-#define GAP (HEIGHT/8)
-#define GAPV (WIDTH/16)
+#define BOARDER 50
+#define do_less_stuff(z) do { \
+	_r = rand()%255 ; \
+	_g = rand()%255 ; \
+	_b = rand()%255 ;  \
+}while(0);
+
+#define do_stuff(lab) do { \
+	static int lab = 0; \
+	if (!lab) \
+	do_less_stuff(); \
+	lab++;\
+}while(0);
+
+				
+
+			srand(getpid());
 			int _ = 0;
 			int l = 0;
 			int k = 0 ;
 			int m = 0 ;
+			int _r = 0 ;
+			int _g = 0 ;
+			int _b = 0 ;
+						static int boom = 0;
+						static int boom1 = 0;
+			while(1) {
 			for (y = 00; y < (HEIGHT); y++,l++,k=0)
 				for (x = 00,m=0; x < WIDTH; m++,x++) {
 					location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
 						(y+vinfo.yoffset) * finfo.line_length;
 
-					if (m<(GAPV+1) ) {
-
-						if (l<(GAP+1) ) {
-							_ = 255 ;
-						} else {
-							_ = 0 ;
-							if (!(l%GAP))
-								l = 0 ;
-						} 
-					}else {
+					if ( y < BOARDER || x < BOARDER || y>(HEIGHT-BOARDER) || x>(WIDTH-BOARDER)) {
+						do_stuff(aa9);
 #if 1
-						if (m<(GAPV+1) ) {
+					} else if ( y < (BOARDER*2) || x < (BOARDER*2) || y>(HEIGHT-(BOARDER*2)) || x>(WIDTH-(BOARDER*2))) {
+						do_less_stuff(aa2);
+					} else if ( y < (BOARDER*3) || x < (BOARDER*3) || y>(HEIGHT-(BOARDER*3)) || x>(WIDTH-(BOARDER*3))) {
+						do_stuff(aa3);
+					} else if ( y < (BOARDER*4) || x < (BOARDER*4) || y>(HEIGHT-(BOARDER*4)) || x>(WIDTH-(BOARDER*4))) {
+						do_less_stuff(aa4);
+					} else if ( y < (BOARDER*5) || x < (BOARDER*5) || y>(HEIGHT-(BOARDER*5)) || x>(WIDTH-(BOARDER*5))) {
+						do_stuff(aa5);
+					} else if ( y < (BOARDER*6) || x < (BOARDER*6) || y>(HEIGHT-(BOARDER*6)) || x>(WIDTH-(BOARDER*6))) {
+						do_less_stuff(aa6);
+					} else if ( y < (BOARDER*7) || x < (BOARDER*7) || y>(HEIGHT-(BOARDER*7)) || x>(WIDTH-(BOARDER*7))) {
+						do_stuff(aa6);
+					} else if ( y < (BOARDER*8) || x < (BOARDER*8) || y>(HEIGHT-(BOARDER*8)) || x>(WIDTH-(BOARDER*8))) {
+						do_less_stuff(aa7);
 #endif
-							_ = 0 ;
-						} else {
-							_ = 255 ;
-							if (!(m%GAPV))
-								m = 0 ;
-						}
+					} else { 
+						_r = 0 ;
+						_b = 0;
+						_g = 0;
 					}
-
-					if (vinfo.bits_per_pixel == 32) {
-						*(fbp + location)     = _^255;        
-						*(fbp + location + 1) = _^255;
-						*(fbp + location + 2) = _^255; 
-						*(fbp + location + 3) = 255;   
-						//location += 4;
-					} else  { //assume 16bpp
-						int b = 10;
-						int g = (x-100)/6;     // A little green
-						int r = 31-(y-100)/16;    // A lot of red
-						unsigned short int t = r<<11 | g << 5 | b;
-						*((unsigned short int*)(fbp + location)) = t;
-					}
-
-				}
-#if 1
-			for (y = 00; y < (HEIGHT); y++,l++,k=0)
-				for (x = 00,m=0; x < WIDTH; m++,x++) {
-					location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-						(y+vinfo.yoffset) * finfo.line_length;
-
-					if ( y < BOARDER || x < BOARDER || y>(HEIGHT-BOARDER) || x>(WIDTH-BOARDER))
 						if (vinfo.bits_per_pixel == 32) {
-							*(fbp + location)     = 0;        
-							*(fbp + location + 1) = 0;
-							*(fbp + location + 2) = 255; 
+							*(fbp + location)     = _b;        
+							*(fbp + location + 1) = _g;
+							*(fbp + location + 2) = _r; 
 							*(fbp + location + 3) = 255;   
 							//location += 4;
-						}  //assume 16bpp
+						} else  { //assume 16bpp
+							int b = 10;
+							int g = (x-100)/6;     // A little green
+							int r = 31-(y-100)/16;    // A lot of red
+							unsigned short int t = r<<11 | g << 5 | b;
+							*((unsigned short int*)(fbp + location)) = t;
+						}
+
+				}
 		}
-#endif
 			munmap(fbp, screensize);
 			close(fbfd);
 			return 0;

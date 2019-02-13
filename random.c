@@ -59,54 +59,11 @@ int main()
 #define WIDTH 1366
 #define HEIGHT (768-6)
 #define BOARDER 20
-#define GAP (HEIGHT/8)
-#define GAPV (WIDTH/16)
 			int _ = 0;
 			int l = 0;
 			int k = 0 ;
 			int m = 0 ;
-			for (y = 00; y < (HEIGHT); y++,l++,k=0)
-				for (x = 00,m=0; x < WIDTH; m++,x++) {
-					location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-						(y+vinfo.yoffset) * finfo.line_length;
-
-					if (m<(GAPV+1) ) {
-
-						if (l<(GAP+1) ) {
-							_ = 255 ;
-						} else {
-							_ = 0 ;
-							if (!(l%GAP))
-								l = 0 ;
-						} 
-					}else {
-#if 1
-						if (m<(GAPV+1) ) {
-#endif
-							_ = 0 ;
-						} else {
-							_ = 255 ;
-							if (!(m%GAPV))
-								m = 0 ;
-						}
-					}
-
-					if (vinfo.bits_per_pixel == 32) {
-						*(fbp + location)     = _^255;        
-						*(fbp + location + 1) = _^255;
-						*(fbp + location + 2) = _^255; 
-						*(fbp + location + 3) = 255;   
-						//location += 4;
-					} else  { //assume 16bpp
-						int b = 10;
-						int g = (x-100)/6;     // A little green
-						int r = 31-(y-100)/16;    // A lot of red
-						unsigned short int t = r<<11 | g << 5 | b;
-						*((unsigned short int*)(fbp + location)) = t;
-					}
-
-				}
-#if 1
+			int _r, _g, _b ;
 			for (y = 00; y < (HEIGHT); y++,l++,k=0)
 				for (x = 00,m=0; x < WIDTH; m++,x++) {
 					location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
@@ -114,14 +71,20 @@ int main()
 
 					if ( y < BOARDER || x < BOARDER || y>(HEIGHT-BOARDER) || x>(WIDTH-BOARDER))
 						if (vinfo.bits_per_pixel == 32) {
-							*(fbp + location)     = 0;        
-							*(fbp + location + 1) = 0;
-							*(fbp + location + 2) = 255; 
+							*(fbp + location)     = _b;        
+							*(fbp + location + 1) = _g;
+							*(fbp + location + 2) = _r; 
 							*(fbp + location + 3) = 255;   
 							//location += 4;
-						}  //assume 16bpp
-		}
-#endif
+						} else  { //assume 16bpp
+							int b = 10;
+							int g = (x-100)/6;     // A little green
+							int r = 31-(y-100)/16;    // A lot of red
+							unsigned short int t = r<<11 | g << 5 | b;
+							*((unsigned short int*)(fbp + location)) = t;
+						}
+
+				}
 			munmap(fbp, screensize);
 			close(fbfd);
 			return 0;
