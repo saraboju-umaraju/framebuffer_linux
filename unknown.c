@@ -59,15 +59,20 @@ int main()
 #define WIDTH 1366
 #define HEIGHT (768-6)
 #define BOARDER 50
+#define _do_less_stuff(z) do { \
+	_r = arr[((z))] ; \
+	_g = arr[((z))+1]; \
+	_b = arr[((z))+2];  \
+}while(0);
 #define do_less_stuff(z) do { \
-	_r = arr[((z)*3)] ; \
-	_g = arr[((z)*3)+1]; \
-	_b = arr[((z)*3)+2];  \
+	_r = rand()%256; \
+	_g = rand()%256; \
+	_b = rand()%256;  \
 }while(0);
 			srand(getpid());
 			unsigned char arr[30] = {};
 			volatile unsigned char index = 0;
-			volatile sleep = 1000000;
+			volatile sleep = 100000;
 
 			int _ = 0;
 			for(_=0; _< 256; _++)
@@ -82,55 +87,12 @@ int main()
 			while(1) {
 			usleep(sleep);
 			index-=3;
-			for (y = 00; y < (HEIGHT); y++,l++,k=0)
+			for (y = 00; y < (HEIGHT); y++,l++,k=0) {
+						do_less_stuff(index++);
 				for (x = 00,m=0; x < WIDTH; m++,x++) {
 					location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
 						(y+vinfo.yoffset) * finfo.line_length;
 
-					if ( y < BOARDER || x < BOARDER || y>(HEIGHT-BOARDER) || x>(WIDTH-BOARDER)) {
-					do_less_stuff(index+83); 
-					} else if ( y < (BOARDER*2) || x < (BOARDER*2) || y>(HEIGHT-(BOARDER*2)) || x>(WIDTH-(BOARDER*2))) {
-					do_less_stuff(index+80); 
-					} else if ( y < (BOARDER*3) || x < (BOARDER*3) || y>(HEIGHT-(BOARDER*3)) || x>(WIDTH-(BOARDER*3))) {
-					do_less_stuff(index+77); 
-					} else if ( y < (BOARDER*4) || x < (BOARDER*4) || y>(HEIGHT-(BOARDER*4)) || x>(WIDTH-(BOARDER*4))) {
-					do_less_stuff(index+74); 
-					} else if ( y < (BOARDER*5) || x < (BOARDER*5) || y>(HEIGHT-(BOARDER*5)) || x>(WIDTH-(BOARDER*5))) {
-					do_less_stuff(index+71); 
-					} else if ( y < (BOARDER*6) || x < (BOARDER*6) || y>(HEIGHT-(BOARDER*6)) || x>(WIDTH-(BOARDER*6))) {
-					do_less_stuff(index+68); 
-					} else if ( y < (BOARDER*7) || x < (BOARDER*7) || y>(HEIGHT-(BOARDER*7)) || x>(WIDTH-(BOARDER*7))) {
-					do_less_stuff(index+65); 
-					} else if ( y < (BOARDER*8) || x < (BOARDER*8) || y>(HEIGHT-(BOARDER*8)) || x>(WIDTH-(BOARDER*8))) {
-					do_less_stuff(index+62); 
-					} else { 
-						_r = 0 ;
-						_b = 0;
-						_g = 0;
-					}
-#if 0
-					if ( y < BOARDER || x < BOARDER || y>(HEIGHT-BOARDER) || x>(WIDTH-BOARDER)) {
-					do_less_stuff(index); 
-					} else if ( y < (BOARDER*2) || x < (BOARDER*2) || y>(HEIGHT-(BOARDER*2)) || x>(WIDTH-(BOARDER*2))) {
-					do_less_stuff(index+3); 
-					} else if ( y < (BOARDER*3) || x < (BOARDER*3) || y>(HEIGHT-(BOARDER*3)) || x>(WIDTH-(BOARDER*3))) {
-					do_less_stuff(index+6); 
-					} else if ( y < (BOARDER*4) || x < (BOARDER*4) || y>(HEIGHT-(BOARDER*4)) || x>(WIDTH-(BOARDER*4))) {
-					do_less_stuff(index+9); 
-					} else if ( y < (BOARDER*5) || x < (BOARDER*5) || y>(HEIGHT-(BOARDER*5)) || x>(WIDTH-(BOARDER*5))) {
-					do_less_stuff(index+12); 
-					} else if ( y < (BOARDER*6) || x < (BOARDER*6) || y>(HEIGHT-(BOARDER*6)) || x>(WIDTH-(BOARDER*6))) {
-					do_less_stuff(index+15); 
-					} else if ( y < (BOARDER*7) || x < (BOARDER*7) || y>(HEIGHT-(BOARDER*7)) || x>(WIDTH-(BOARDER*7))) {
-					do_less_stuff(index+18); 
-					} else if ( y < (BOARDER*8) || x < (BOARDER*8) || y>(HEIGHT-(BOARDER*8)) || x>(WIDTH-(BOARDER*8))) {
-					do_less_stuff(index+21); 
-					} else { 
-						_r = 0 ;
-						_b = 0;
-						_g = 0;
-					}
-#endif
 						if (vinfo.bits_per_pixel == 32) {
 							*(fbp + location)     = _b;        
 							*(fbp + location + 1) = _g;
@@ -146,6 +108,7 @@ int main()
 						}
 
 				}
+}
 }
 			munmap(fbp, screensize);
 			close(fbfd);
